@@ -20,10 +20,7 @@
     "autoload": {
         "psr-4": {
             "Trisk\\": "src/Trisk/"
-        },
-        "files" : [
-            "src/Trisk/Glip/helpers.php"
-        ]
+        }
     },
     "minimum-stability": "dev"
 }
