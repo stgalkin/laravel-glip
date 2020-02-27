@@ -18,8 +18,7 @@
         "ringcentral/ringcentral-php": "^2.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "satooshi/php-coveralls": "dev-master"
+        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-4": {
