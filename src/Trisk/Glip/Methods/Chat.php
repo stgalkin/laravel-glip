@@ -19,7 +19,7 @@ class Chat extends GlipMethod implements ChatContract
      */
     public function get(array $parameters = []): ChatResponse
     {
-        return $this->_toResponse($this->api()->get('posts', $parameters));
+        return $this->_toResponse($this->api()->get('chats', $parameters));
     }
 
     /**
