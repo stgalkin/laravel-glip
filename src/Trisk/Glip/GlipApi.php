@@ -49,16 +49,12 @@ class GlipApi implements ApiContract
     }
 
     /**
-     * @param UserCredentials $credentials
-     *
      * @return \RingCentral\SDK\Http\ApiResponse
      * @throws \RingCentral\SDK\Http\ApiException
      */
-    public function authorize(UserCredentials $credentials)
+    public function authorize()
     {
-        $this->userCredentials = $credentials;
-
-        return $this->_ringCentral()->platform()->login($credentials->username(), null, $credentials->password());
+        return $this->_ringCentral()->platform()->login($this->_userCredentials()->username(), null, $this->_userCredentials()->password());
     }
 
     /**
@@ -94,7 +90,7 @@ class GlipApi implements ApiContract
     private function path(string $apiMethod): string
     {
         if (!$this->isAuthorized()) {
-            $this->authorize($this->userCredentials);
+            $this->authorize();
         }
 
         return static::GLIP_REQUEST_PATH . $apiMethod;
@@ -169,5 +165,29 @@ class GlipApi implements ApiContract
         }
 
         return $this->ringCentral;
+    }
+
+    /**
+     * @return UserCredentials
+     */
+    private function _userCredentials(): UserCredentials
+    {
+        if (!$this->userCredentials instanceof UserCredentials) {
+            throw new \UnexpectedValueException("userCredentials does't init properly");
+        }
+
+        return $this->userCredentials;
+    }
+
+    /**
+     * @param UserCredentials $userCredentials
+     *
+     * @return GlipApi
+     */
+    public function setUserCredentials(UserCredentials $userCredentials): GlipApi
+    {
+        $this->userCredentials = $userCredentials;
+
+        return $this;
     }
 }
