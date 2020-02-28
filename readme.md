@@ -3,7 +3,7 @@
 
 
 # laravel-glip
-Simple Laravel Wrapper for Glip. 
+Simple easy-weight Laravel Wrapper for Glip. 
 Currently only posts & chats supports. 
 
 ## Requirements

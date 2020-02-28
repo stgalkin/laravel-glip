@@ -15,7 +15,7 @@ interface ChatContract
      * @param array $parameters
      *
      * @return Chat
-     * @throws \RingCentral\SDK\Http\ApiException
+     * @throws \Exception
      */
     public function get(array $parameters = []): Chat;
 }

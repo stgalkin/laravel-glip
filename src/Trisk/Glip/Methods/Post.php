@@ -2,9 +2,8 @@
 
 namespace Trisk\Glip\Methods;
 
-
-use RingCentral\SDK\Http\ApiResponse;
 use Trisk\Glip\Contracts\PostContract;
+use Trisk\Glip\ValueObjects\Response\GlipApiResponse;
 use Trisk\Glip\ValueObjects\Response\Post as PostResponse;
 
 /**
@@ -31,12 +30,12 @@ class Post extends GlipMethod implements PostContract
     }
 
     /**
-     * @param ApiResponse $response
+     * @param GlipApiResponse $response
      *
      * @return PostResponse
      * @throws \Exception
      */
-    private function _toResponse(ApiResponse $response): PostResponse
+    private function _toResponse(GlipApiResponse $response): PostResponse
     {
         return new PostResponse($response);
     }

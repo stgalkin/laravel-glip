@@ -2,7 +2,7 @@
 
 namespace Trisk\Glip\Contracts;
 
-use RingCentral\SDK\Http\ApiResponse;
+use Trisk\Glip\ValueObjects\Response\GlipApiResponse;
 
 /**
  * Interface ApiContract
@@ -15,44 +15,35 @@ interface ApiContract
      * @param string $apiMethod
      * @param array  $parameters
      *
-     * @return ApiResponse
-     * @throws \RingCentral\SDK\Http\ApiException|\Exception|\UnexpectedValueException
+     * @return GlipApiResponse
+     * @throws \Exception|\UnexpectedValueException
      */
-    public function get(string $apiMethod, array $parameters = []): ApiResponse;
+    public function get(string $apiMethod, array $parameters = []): GlipApiResponse;
 
     /**
      * @param string $apiMethod
      * @param array  $parameters
      *
-     * @return ApiResponse
-     * @throws \RingCentral\SDK\Http\ApiException|\Exception|\UnexpectedValueException
+     * @return GlipApiResponse
+     * @throws \Exception|\UnexpectedValueException
      */
-    public function post(string $apiMethod, array $parameters = []): ApiResponse;
+    public function post(string $apiMethod, array $parameters = []): GlipApiResponse;
 
     /**
      * @param string $apiMethod
      * @param array  $parameters
      *
-     * @return ApiResponse
-     * @throws \RingCentral\SDK\Http\ApiException|\Exception|\UnexpectedValueException
+     * @return GlipApiResponse
+     * @throws \Exception|\UnexpectedValueException
      */
-    public function delete(string $apiMethod, array $parameters = []): ApiResponse;
+    public function delete(string $apiMethod, array $parameters = []): GlipApiResponse;
 
     /**
      * @param string $apiMethod
      * @param array  $parameters
      *
-     * @return ApiResponse
-     * @throws \RingCentral\SDK\Http\ApiException|\Exception|\UnexpectedValueException
+     * @return GlipApiResponse
+     * @throws \Exception|\UnexpectedValueException
      */
-    public function put(string $apiMethod, array $parameters = []): ApiResponse;
-
-    /**
-     * @param string $apiMethod
-     * @param array  $parameters
-     *
-     * @return ApiResponse
-     * @throws \RingCentral\SDK\Http\ApiException|\Exception|\UnexpectedValueException
-     */
-    public function patch(string $apiMethod, array $parameters = []): ApiResponse;
+    public function put(string $apiMethod, array $parameters = []): GlipApiResponse;
 }
