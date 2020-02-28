@@ -21,9 +21,10 @@ interface PostContract
 
     /**
      * @param array $parameters
+     * @param string $chatId
      *
      * @return Post
      * @throws \RingCentral\SDK\Http\ApiException|\Exception
      */
-    public function post(array $parameters = []): Post;
+    public function post(string $chatId, array $parameters = []): Post;
 }
