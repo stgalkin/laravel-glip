@@ -4,6 +4,7 @@ namespace Trisk\Glip;
 
 use Illuminate\Support\ServiceProvider;
 use Trisk\Glip\ValueObjects\ClientCredentials;
+use Trisk\Glip\ValueObjects\UserCredentials;
 
 /**
  * Class GlipApiServiceProvider
@@ -62,7 +63,9 @@ class GlipApiServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('Trisk\Glip\Contracts\GlipApi', function () {
-            return new GlipApi(new ClientCredentials(config('glip.clientId', ''), config('glip.clientSecret', '')));
+            $api = new GlipApi(new ClientCredentials(config('glip.clientId', ''), config('glip.clientSecret', '')));
+
+            return $api->setUserCredentials(new UserCredentials(config('glip.username', ''), config('glip.password', '')));
         });
 
         $this->app->alias('Trisk\Glip\Contracts\GlipApi', 'glip.api');
