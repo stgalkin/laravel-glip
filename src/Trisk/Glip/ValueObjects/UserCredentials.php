@@ -3,7 +3,7 @@
 namespace Trisk\Glip\ValueObjects;
 
 /**
- * Class GlipUserCredentials
+ * Class UserCredentials
  *
  * @package Trisk\Glip\ValueObjects
  */
@@ -20,15 +20,20 @@ final class UserCredentials
     private $password;
 
     /**
-     * RingCentralCredentials constructor.
-     *
-     * @param string $password
-     * @param string $username
+     * @var string
      */
-    public function __construct(string $username, string $password)
+    private $extension;
+
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $extension
+     */
+    public function __construct(string $username, string $password, string $extension = '')
     {
         $this->username = $username;
         $this->password = $password;
+        $this->extension = $extension;
     }
 
     /**
@@ -45,5 +50,13 @@ final class UserCredentials
     public function password(): string
     {
         return $this->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function extension(): string
+    {
+        return $this->extension;
     }
 }

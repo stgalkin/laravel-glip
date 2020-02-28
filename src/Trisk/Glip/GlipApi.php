@@ -2,11 +2,11 @@
 
 namespace Trisk\Glip;
 
-use RingCentral\SDK\Http\ApiResponse;
-use RingCentral\SDK\SDK;
 use Trisk\Glip\Contracts\ApiContract;
+use Trisk\Glip\Platform\Platform;
+use Trisk\Glip\ValueObjects\Response\GlipApiResponse;
 use Trisk\Glip\ValueObjects\UserCredentials;
-use Trisk\Glip\ValueObjects\ClientCredentials;
+use Trisk\Glip\ValueObjects\PlatformConfig;
 use Illuminate\Support\Traits\Macroable;
 
 /**
@@ -16,18 +16,14 @@ use Illuminate\Support\Traits\Macroable;
  */
 class GlipApi implements ApiContract
 {
-    const SANDBOX = "https://platform.devtest.ringcentral.com";
-
-    const PRODUCTION = "https://platform.ringcentral.com";
-
     const GLIP_REQUEST_PATH = "/glip/";
 
     use Macroable;
 
     /**
-     * @var SDK
+     * @var Platform
      */
-    private $ringCentral;
+    private $platform;
 
     /**
      * @var UserCredentials
@@ -35,26 +31,27 @@ class GlipApi implements ApiContract
     private $userCredentials;
 
     /**
-     * @param ClientCredentials $credentials
+     * @param PlatformConfig $config
      */
-    public function __construct(ClientCredentials $credentials)
+    public function __construct(PlatformConfig $config)
     {
         if (\App::isLocal()) {
-            $server = static::SANDBOX;
+            $server = Platform::SANDBOX;
         } else {
-            $server = static::PRODUCTION;
+            $server = Platform::PRODUCTION;
         }
 
-        $this->ringCentral = new SDK($credentials->clientId(), $credentials->clientSecret(), $server, config('glip.appName', ''), config('glip.appVersion', ''));
+        $this->platform = new Platform($config, $server);
     }
 
     /**
-     * @return \RingCentral\SDK\Http\ApiResponse
-     * @throws \RingCentral\SDK\Http\ApiException
+     * @return GlipApi
      */
-    public function authorize()
+    public function authorize(): GlipApi
     {
-        return $this->_ringCentral()->platform()->login($this->_userCredentials()->username(), null, $this->_userCredentials()->password());
+        $this->_platform()->authorize($this->_userCredentials());
+
+        return $this;
     }
 
     /**
@@ -62,30 +59,29 @@ class GlipApi implements ApiContract
      */
     public function isAuthorized(): bool
     {
-        return $this->_ringCentral()->platform()->auth()->accessTokenValid();
+        return $this->_platform()->accessTokenValid();
     }
 
     /**
      * @inheritdoc
      */
-    public function get(string $apiMethod, array $parameters = []): ApiResponse
+    public function get(string $apiMethod, array $parameters = []): GlipApiResponse
     {
-        return $this->_ringCentral()->platform()->get($this->path($apiMethod), $parameters);
+        return $this->_platform()->get($this->path($apiMethod), $parameters);
     }
 
     /**
      * @inheritdoc
      */
-    public function post(string $apiMethod, array $parameters = []): ApiResponse
+    public function post(string $apiMethod, array $parameters = []): GlipApiResponse
     {
-        return $this->_ringCentral()->platform()->post($this->path($apiMethod), $parameters);
+        return $this->_platform()->post($this->path($apiMethod), ['json' => $parameters]);
     }
 
     /**
      * @param string $apiMethod
      *
      * @return string
-     * @throws \RingCentral\SDK\Http\ApiException
      */
     private function path(string $apiMethod): string
     {
@@ -99,25 +95,17 @@ class GlipApi implements ApiContract
     /**
      * @inheritdoc
      */
-    public function put(string $apiMethod, array $parameters = []): ApiResponse
+    public function put(string $apiMethod, array $parameters = []): GlipApiResponse
     {
-        return $this->_ringCentral()->platform()->put($this->path($apiMethod), $parameters);
+        return $this->_platform()->put($this->path($apiMethod), $parameters);
     }
 
     /**
      * @inheritdoc
      */
-    public function delete(string $apiMethod, array $parameters = []): ApiResponse
+    public function delete(string $apiMethod, array $parameters = []): GlipApiResponse
     {
-        return $this->_ringCentral()->platform()->delete($this->path($apiMethod), $parameters);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function patch(string $apiMethod, array $parameters = []): ApiResponse
-    {
-        return $this->_ringCentral()->platform()->patch($this->path($apiMethod), $parameters);
+        return $this->_platform()->delete($this->path($apiMethod), $parameters);
     }
 
     /**
@@ -155,16 +143,16 @@ class GlipApi implements ApiContract
     }
 
     /**
-     * @return SDK
+     * @return Platform
      * @throws \UnexpectedValueException
      */
-    private function _ringCentral(): SDK
+    private function _platform(): Platform
     {
-        if (!$this->ringCentral instanceof SDK) {
-            throw new \UnexpectedValueException("ringCentral does't init properly");
+        if (!$this->platform instanceof Platform) {
+            throw new \UnexpectedValueException("Platform does't init properly");
         }
 
-        return $this->ringCentral;
+        return $this->platform;
     }
 
     /**

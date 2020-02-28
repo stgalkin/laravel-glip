@@ -2,10 +2,9 @@
 
 namespace Trisk\Glip\Methods;
 
-use RingCentral\SDK\Http\ApiResponse;
 use Trisk\Glip\Contracts\ChatContract;
-use Trisk\Glip\Contracts\PersonContract;
 use \Trisk\Glip\ValueObjects\Response\Chat as ChatResponse;
+use Trisk\Glip\ValueObjects\Response\GlipApiResponse;
 
 /**
  * Class Chat
@@ -23,11 +22,11 @@ class Chat extends GlipMethod implements ChatContract
     }
 
     /**
-     * @param ApiResponse $response
+     * @param GlipApiResponse $response
      *
      * @return ChatResponse
      */
-    private function _toResponse(ApiResponse $response): ChatResponse
+    private function _toResponse(GlipApiResponse $response): ChatResponse
     {
         return new ChatResponse($response);
     }

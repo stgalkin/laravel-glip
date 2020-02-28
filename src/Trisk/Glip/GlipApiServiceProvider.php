@@ -3,7 +3,7 @@
 namespace Trisk\Glip;
 
 use Illuminate\Support\ServiceProvider;
-use Trisk\Glip\ValueObjects\ClientCredentials;
+use Trisk\Glip\ValueObjects\PlatformConfig;
 use Trisk\Glip\ValueObjects\UserCredentials;
 
 /**
@@ -48,24 +48,19 @@ class GlipApiServiceProvider extends ServiceProvider
     protected $shortcutPrefix = 'glip.';
 
     /**
-     *
-     */
-    public function boot()
-    {
-        $path = realpath(__DIR__.'/../../../config/config.php');
-
-        $this->publishes([$path => config_path('glip.php')], 'config');
-    }
-
-    /**
      * Register the service provider.
      */
     public function register()
     {
         $this->app->singleton('Trisk\Glip\Contracts\GlipApi', function () {
-            $api = new GlipApi(new ClientCredentials(config('glip.clientId', ''), config('glip.clientSecret', '')));
+            $api = new GlipApi(new PlatformConfig(
+                config('services.glip.client_id', ''),
+                config('services.glip.client_secret', ''),
+                config('services.glip.app_name', ''),
+                config('services.glip.app_version', '')
+            ));
 
-            return $api->setUserCredentials(new UserCredentials(config('glip.username', ''), config('glip.password', '')));
+            return $api->setUserCredentials(new UserCredentials(config('services.glip.username', ''), config('services.glip.password', '')));
         });
 
         $this->app->alias('Trisk\Glip\Contracts\GlipApi', 'glip.api');
