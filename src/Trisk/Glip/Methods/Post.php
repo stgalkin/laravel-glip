@@ -25,9 +25,9 @@ class Post extends GlipMethod implements PostContract
     /**
      * @inheritDoc
      */
-    public function post(array $parameters = []): PostResponse
+    public function post(string $chatId, array $parameters = []): PostResponse
     {
-        return $this->_toResponse($this->api()->post('posts', $parameters));
+        return $this->_toResponse($this->api()->post("chats/{$chatId}/posts", $parameters));
     }
 
     /**
